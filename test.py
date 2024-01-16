@@ -1,6 +1,8 @@
 import requests
 import json
 
+
+
 url = 'https://api.random.org/json-rpc/2/invoke'
 
 data = {
