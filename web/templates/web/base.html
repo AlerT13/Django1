@@ -14,7 +14,7 @@
             </div>
         {% else %}
             <a href="{% url 'main' %}">Новости</a>
-            <a href="#">Написать новость</a>
+            <a href="{% url 'news_add' %}">Написать новость</a>
             <a href="#">Избранное</a>
             <div style="text-align:right">
                 <span>Вы авторизованы как  <b>{{ user.username }}</b></span>

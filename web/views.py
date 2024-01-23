@@ -1,13 +1,43 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+
 
 from web.forms import *
 from web.models import *
 
 @login_required
 def main_view(request):
-    return render(request, "web/main.html")
+    news = News.objects.all()
+
+    total_count = news.count()
+
+    paginator = Paginator(news, per_page=3)
+    page_number = request.GET.get("page", 1)
+    return render(request, "web/main.html", {
+        'news': paginator.get_page(page_number),
+        'total_count': total_count,
+    })
+
+def news_add_view(request):
+    form = NewsForm()
+    if request.method == 'POST':
+        form = NewsForm(data=request.POST, initial={"user": request.user})
+        if form.is_valid():
+            form.save()
+            return redirect("main")
+    return render(request, "web/news_create.html", {
+        "form": form
+    })
+
+def news_delete_view(request, id):
+    news = get_object_or_404(News, id=id)
+    news.delete()
+    return redirect('main')
+
+
+
 
 
 def registration_view(request):
